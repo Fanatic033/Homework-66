@@ -7,6 +7,11 @@ export interface Meal {
 
 export type ApiMeal = Omit<Meal, 'id'>
 
+export interface ApiMeals {
+  [id: string]: ApiMeal;
+}
+
+
 export interface MealMutation {
   eating: string;
   food: string;

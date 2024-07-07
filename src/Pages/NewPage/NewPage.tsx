@@ -1,16 +1,16 @@
 import Form from '../../Components/Form/Form.tsx';
-// import {useNavigate} from 'react-router-dom';
 import {ApiMeal,} from '../../types.ts';
 import axiosApi from '../../axiosApi.ts';
+import {useNavigate} from 'react-router-dom';
 
 const NewPage = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const addMeal = async (meal: ApiMeal) => {
     try {
-      await axiosApi.post('/meal.json', meal);
+      await axiosApi.post('/meals.json', meal);
     } finally {
-      // navigate('/');
+      navigate('/');
     }
   };
 
