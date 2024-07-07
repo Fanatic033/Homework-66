@@ -1,11 +1,14 @@
 export interface Meal {
-    eating: string;
-    food: string;
-    calories: number;
-}
-
-export interface MealMutation{
+  id: string;
   eating: string;
   food: string;
-  calories: string
+  calories: number;
+}
+
+export type ApiMeal = Omit<Meal, 'id'>
+
+export interface MealMutation {
+  eating: string;
+  food: string;
+  calories: string;
 }

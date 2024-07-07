@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {Meal, MealMutation} from '../../types.ts';
+import {ApiMeal, MealMutation} from '../../types.ts';
 
 interface Props {
-  onSubmit: (meal: Meal) => void;
+  onSubmit: (meal: ApiMeal) => void;
 }
 
 const emptyState: MealMutation = {
@@ -13,10 +13,9 @@ const emptyState: MealMutation = {
 const Form: React.FC<Props> = ({onSubmit}) => {
 
   const [form, setForm] = useState(emptyState);
-  const [selectedPage, setSelectedPage] = useState('');
 
   const changeMeal = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setForm((prev) => ({
       ...prev,
@@ -33,18 +32,19 @@ const Form: React.FC<Props> = ({onSubmit}) => {
     });
   };
 
+
   return (
     <>
       <form className="container" onSubmit={onFormSubmit}>
-        <h2 className="text-center mt-5">Edit Page</h2>
+        <h2 className="text-center mt-5">Add new Meal</h2>
         <div className="input-group">
           <label className="mt-5 w-100">
             Meal
             <select
-              name="page"
+              name="eating"
               className="form-select form-select mt-1"
-              onChange={(e) => setSelectedPage(e.target.value)}
-              value={selectedPage}
+              onChange={changeMeal}
+              value={form.eating}
             >
               <option value="" disabled>Choose a Meal</option>
               <option value="Breakfast">Breakfast</option>
@@ -60,7 +60,7 @@ const Form: React.FC<Props> = ({onSubmit}) => {
             <input
               className="w-100"
               type="text"
-              name="title"
+              name="food"
               value={form.food}
               onChange={changeMeal}
               placeholder="Enter description"
@@ -72,7 +72,8 @@ const Form: React.FC<Props> = ({onSubmit}) => {
             Calories
             <input
               className="w-100"
-              name="content"
+              type={'number'}
+              name="calories"
               value={form.calories}
               onChange={changeMeal}
               placeholder="Enter calories"
