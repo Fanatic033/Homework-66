@@ -7,6 +7,7 @@ import Spinner from '../../Components/Spinner/Spinner.tsx';
 const HomePage = () => {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [loading, setLoading] = useState(false);
+  const [isBtnLoader, setIsBtnLoader] = useState<string | null>(null);
 
   const fetchMeals = useCallback(async () => {
     try {
@@ -35,18 +36,23 @@ const HomePage = () => {
   }, 0);
 
   const deleteMeal = async (id: string) => {
-    if (window.confirm('Are you sure?')) {
-      await axiosApi.delete(`/meals/${id}.json`);
-      await fetchMeals();
+    setIsBtnLoader(id);
+    try {
+      if (window.confirm('Are you sure?')) {
+        await axiosApi.delete(`/meals/${id}.json`);
+        await fetchMeals();
+      }
+    } finally {
+      setIsBtnLoader(null);
     }
   };
 
   return (
     <>
-      {loading ? <div className={'d-flex justify-content-center align-items-center mt-5'}><Spinner/></div>
+      {loading ? <div className={'text-center mt-5'}><Spinner/></div>
         : <div className={' mt-5'}>
-          <h3 className={'text-center mb-3'}>Total Calories {total}</h3>
-          <MealList meals={meals} deleteMeal={deleteMeal}/>
+          <h3 className={'text-center mb-3'}>Total Calories: {total}</h3>
+          <MealList meals={meals} deleteMeal={deleteMeal} loader={isBtnLoader}/>
         </div>
       }
 

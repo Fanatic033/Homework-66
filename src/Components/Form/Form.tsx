@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import {ApiMeal, MealMutation} from '../../types.ts';
+import ButtonSpinner from '../Spinner/ButtonSpinner.tsx';
 
 interface Props {
   onSubmit: (meal: ApiMeal) => void;
   existingMeal?: ApiMeal;
+  isLoading: boolean;
 }
 
 const emptyState: MealMutation = {
@@ -11,7 +13,7 @@ const emptyState: MealMutation = {
   food: '',
   calories: '',
 };
-const Form: React.FC<Props> = ({onSubmit, existingMeal}) => {
+const Form: React.FC<Props> = ({onSubmit, existingMeal, isLoading = false}) => {
   const initialState: MealMutation = existingMeal
     ? {...existingMeal, calories: existingMeal.calories.toString()}
     : emptyState;
@@ -84,7 +86,13 @@ const Form: React.FC<Props> = ({onSubmit, existingMeal}) => {
             />
           </label>
         </div>
-        <button type="submit" className="btn btn-primary mt-3 px-5">Save</button>
+        <button
+          type="submit"
+          className="btn btn-primary mt-3 px-5"
+          disabled={isLoading}>
+          {isLoading && <ButtonSpinner/>}
+          {existingMeal ? 'Change' : 'Create'}
+        </button>
       </form>
     </>
 
