@@ -3,6 +3,7 @@ import {ApiMeal, MealMutation} from '../../types.ts';
 
 interface Props {
   onSubmit: (meal: ApiMeal) => void;
+  existingMeal?: ApiMeal;
 }
 
 const emptyState: MealMutation = {
@@ -10,9 +11,12 @@ const emptyState: MealMutation = {
   food: '',
   calories: '',
 };
-const Form: React.FC<Props> = ({onSubmit}) => {
+const Form: React.FC<Props> = ({onSubmit, existingMeal}) => {
+  const initialState: MealMutation = existingMeal
+    ? {...existingMeal, calories: existingMeal.calories.toString()}
+    : emptyState;
 
-  const [form, setForm] = useState(emptyState);
+  const [form, setForm] = useState(initialState);
 
   const changeMeal = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -36,7 +40,7 @@ const Form: React.FC<Props> = ({onSubmit}) => {
   return (
     <>
       <form className="container" onSubmit={onFormSubmit}>
-        <h2 className="text-center mt-5">Add new Meal</h2>
+        <h2 className="text-center mt-5">{existingMeal ? 'Edit Meal' : 'add New Meal'}</h2>
         <div className="input-group">
           <label className="mt-5 w-100">
             Meal
