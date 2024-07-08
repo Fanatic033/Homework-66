@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {ApiMeal, MealMutation} from '../../types.ts';
 import ButtonSpinner from '../Spinner/ButtonSpinner.tsx';
+import DatePicker from 'react-datepicker';
 
 interface Props {
   onSubmit: (meal: ApiMeal) => void;
@@ -12,6 +13,7 @@ const emptyState: MealMutation = {
   eating: '',
   food: '',
   calories: '',
+  date: new Date().toISOString().split('T')[0],
 };
 const Form: React.FC<Props> = ({onSubmit, existingMeal, isLoading = false}) => {
   const initialState: MealMutation = existingMeal
@@ -28,7 +30,14 @@ const Form: React.FC<Props> = ({onSubmit, existingMeal, isLoading = false}) => {
       [event.target.name]: event.target.value,
     }));
   };
-
+  const getDate = (date: Date | null) => {
+    if (date) {
+      setForm((prev) => ({
+        ...prev,
+        date: date.toISOString().split('T')[0],
+      }));
+    }
+  };
 
   const onFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -42,10 +51,10 @@ const Form: React.FC<Props> = ({onSubmit, existingMeal, isLoading = false}) => {
   return (
     <>
       <form className="container" onSubmit={onFormSubmit}>
-        <h2 className="text-center mt-5">{existingMeal ? 'Edit Meal' : 'add New Meal'}</h2>
+        <h2 className="text-center mt-5">{existingMeal ? 'Edit Meal' : 'Add New Meal'}</h2>
         <div className="input-group">
           <label className="mt-5 w-100">
-            Meal
+            <strong>Meal</strong>
             <select
               name="eating"
               className="form-select form-select mt-1"
@@ -62,9 +71,9 @@ const Form: React.FC<Props> = ({onSubmit, existingMeal, isLoading = false}) => {
         </div>
         <div className="input-group">
           <label className="mt-5">
-            Meal Description
+            <strong>Meal Description</strong>
             <input
-              className="w-100"
+              className="w-100 form-control"
               type="text"
               name="food"
               value={form.food}
@@ -75,9 +84,9 @@ const Form: React.FC<Props> = ({onSubmit, existingMeal, isLoading = false}) => {
         </div>
         <div className="input-group">
           <label className="mt-5">
-            Calories
+            <strong>Calories</strong>
             <input
-              className="w-100"
+              className="w-100 form-control"
               type={'number'}
               name="calories"
               value={form.calories}
@@ -86,9 +95,20 @@ const Form: React.FC<Props> = ({onSubmit, existingMeal, isLoading = false}) => {
             />
           </label>
         </div>
+        <div className="input-group">
+          <label className="mt-5">
+            <strong className={'d-block'}>Date</strong>
+            <DatePicker
+              selected={new Date(form.date)}
+              onChange={getDate}
+              className="form-control mt-1 w-100"
+              dateFormat="yyyy-MM-dd"
+            />
+          </label>
+        </div>
         <button
           type="submit"
-          className="btn btn-primary mt-3 px-5"
+          className="btn btn-primary mt-4 px-5"
           disabled={isLoading}>
           {isLoading && <ButtonSpinner/>}
           {existingMeal ? 'Change' : 'Create'}

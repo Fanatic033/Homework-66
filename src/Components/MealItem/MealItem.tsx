@@ -19,6 +19,7 @@ const PostItem: React.FC<Props> = ({meal, onDelete, btnLoader = false}) => {
         <div className="card-body">
           <h5 className="card-text"><small className={'text-body-secondary'}>{meal.eating}</small></h5>
           <p className="card-text fs-5">{meal.food}</p>
+          <p>Date: {meal.date}</p>
           <Link to={`/meals/edit/${meal.id}`} className="btn btn-warning me-4 pe-3">Edit</Link>
           <button
             className="btn btn-danger"

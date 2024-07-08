@@ -3,6 +3,7 @@ export interface Meal {
   eating: string;
   food: string;
   calories: number;
+  date: string;
 }
 
 export type ApiMeal = Omit<Meal, 'id'>
@@ -16,4 +17,5 @@ export interface MealMutation {
   eating: string;
   food: string;
   calories: string;
+  date: string;
 }

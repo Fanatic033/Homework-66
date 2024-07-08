@@ -3,6 +3,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {ApiMeals, Meal} from '../../types.ts';
 import axiosApi from '../../axiosApi.ts';
 import Spinner from '../../Components/Spinner/Spinner.tsx';
+import {isToday} from 'date-fns';
 
 const HomePage = () => {
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -12,14 +13,14 @@ const HomePage = () => {
   const fetchMeals = useCallback(async () => {
     try {
       setLoading(true);
-      const {data: meals} = await axiosApi.get<ApiMeals | null>('/meals.json');
+      const {data: meals} = await axiosApi.get<ApiMeals | null>('/meals.json?orderBy="date"');
       if (!meals) {
         setMeals([]);
       } else {
         const newMeal = Object.keys(meals).map((id) => ({
           ...meals[id],
           id,
-        }));
+        })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         setMeals(newMeal);
       }
     } finally {
@@ -31,7 +32,8 @@ const HomePage = () => {
     void fetchMeals();
   }, [fetchMeals]);
 
-  const total = meals.reduce((sum, meal) => {
+  const todayMeals = meals.filter((meal) => isToday(new Date(meal.date)));
+  const total = todayMeals.reduce((sum, meal) => {
     return sum + meal.calories;
   }, 0);
 
